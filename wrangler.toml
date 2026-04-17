@@ -1,2 +1,2 @@
-name = "yarisma"
+name = "yarisma-oyunu"
 pages_build_output_dir = "yarisma-oyunu.html" # Dosyaların olduğu klasör (ana dizin ise ./)
