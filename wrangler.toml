@@ -1,0 +1,2 @@
+name = "yarisma-oyunu"
+pages_build_output_dir = "./" # Dosyaların olduğu klasör (ana dizin ise ./)
