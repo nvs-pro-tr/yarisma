@@ -1,0 +1,14 @@
+name       = "yarisma-scores"
+main       = "worker.js"
+compatibility_date = "2024-01-01"
+
+# KV namespace — deploy ettikten sonra aşağıdaki id'yi gerçek id ile değiştir:
+# 1) `npx wrangler kv namespace create SCORES` komutunu çalıştır
+# 2) Çıktıdaki id değerini buraya yapıştır
+[[kv_namespaces]]
+binding = "SCORES"
+id      = "BURAYA_KV_NAMESPACE_ID_YAZ"
+
+# Preview (local test) için:
+# id      = "BURAYA_KV_NAMESPACE_ID_YAZ"
+# preview_id = "BURAYA_PREVIEW_ID_YAZ"
