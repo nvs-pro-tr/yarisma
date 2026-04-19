@@ -19,671 +19,136 @@
     --border: rgba(0,245,255,0.2);
     --text: #e8f4ff;
     --text-dim: #7a9ab8;
-
     --col-red: #ff3030;
     --col-blue: #1a8cff;
     --col-green: #00e676;
     --col-purple: #bf40ff;
+
+    /* ── Buraya kendi Worker URL'inizi yazın ── */
+    /* Örnek: https://yarisma-scores.KULLANICIADINIZ.workers.dev */
   }
 
-  html, body {
-    height: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Exo 2', sans-serif;
-    overflow: hidden;
-  }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Exo 2', sans-serif; overflow: hidden; }
 
-  #app {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* ─── BACKGROUND GRID ─── */
+  #app { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
   #app::before {
     content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
     background-size: 50px 50px;
     animation: gridMove 20s linear infinite;
   }
+  @keyframes gridMove { from { background-position: 0 0; } to { background-position: 50px 50px; } }
 
-  @keyframes gridMove {
-    from { background-position: 0 0; }
-    to   { background-position: 50px 50px; }
-  }
+  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; z-index: 10; animation: screenIn 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+  @keyframes screenIn { from { opacity: 0; transform: scale(0.96) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-  /* ─── SCREEN BASE ─── */
-  .screen {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    z-index: 10;
-    animation: screenIn 0.5s cubic-bezier(0.22,1,0.36,1) both;
-  }
+  .logo-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 48px; }
+  .logo-icon { font-size: 64px; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { filter: drop-shadow(0 0 16px var(--neon-cyan)); } 50% { filter: drop-shadow(0 0 40px var(--neon-cyan)); } }
+  .logo-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(36px, 6vw, 72px); font-weight: 700; letter-spacing: 6px; text-transform: uppercase; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .logo-sub { font-size: 13px; letter-spacing: 4px; color: var(--text-dim); text-transform: uppercase; }
 
-  @keyframes screenIn {
-    from { opacity: 0; transform: scale(0.96) translateY(20px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
-  }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 44px; border: none; border-radius: 6px; font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: linear-gradient(135deg, var(--neon-cyan), #0088aa); color: #000; box-shadow: 0 0 24px rgba(0,245,255,0.5); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,245,255,0.8); }
+  .btn-ghost { background: transparent; border: 2px solid var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 12px rgba(0,245,255,0.2); }
+  .btn-ghost:hover { background: rgba(0,245,255,0.1); box-shadow: 0 0 24px rgba(0,245,255,0.4); }
+  .btn-gold { background: linear-gradient(135deg, var(--neon-gold), #cc9900); color: #000; box-shadow: 0 0 24px rgba(255,215,0,0.5); }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(255,215,0,0.8); }
+  .btn-restart { background: linear-gradient(135deg, var(--neon-magenta), #880066); color: #fff; box-shadow: 0 0 24px rgba(255,0,170,0.5); }
+  .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(255,0,170,0.8); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
-  /* ─── LOGO ─── */
-  .logo-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 48px;
-  }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 40px; backdrop-filter: blur(16px); width: 100%; max-width: 500px; }
+  .card-title { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--neon-cyan); text-align: center; margin-bottom: 32px; }
 
-  .logo-icon {
-    font-size: 64px;
-    animation: pulse 2s ease-in-out infinite;
-  }
+  .input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .input-group label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
+  .input-group input { background: rgba(0,245,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 16px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+  .input-group input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 12px rgba(0,245,255,0.2); }
 
-  @keyframes pulse {
-    0%,100% { filter: drop-shadow(0 0 16px var(--neon-cyan)); }
-    50%      { filter: drop-shadow(0 0 40px var(--neon-cyan)); }
-  }
+  .countdown-big { font-family: 'Rajdhani', sans-serif; font-size: clamp(100px, 20vw, 180px); font-weight: 700; line-height: 1; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: countPulse 1s ease-in-out infinite; min-height: 200px; display: flex; align-items: center; justify-content: center; }
+  @keyframes countPulse { 0% { filter: drop-shadow(0 0 10px rgba(0,245,255,0.4)); transform: scale(1); } 50% { filter: drop-shadow(0 0 40px rgba(0,245,255,0.9)); transform: scale(1.05); } 100% { filter: drop-shadow(0 0 10px rgba(0,245,255,0.4)); transform: scale(1); } }
+  .countdown-label { font-family: 'Rajdhani', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--neon-gold); text-align: center; max-width: 520px; line-height: 1.6; }
+  .countdown-sublabel { font-size: 14px; color: var(--text-dim); letter-spacing: 2px; margin-top: 12px; text-align: center; }
 
-  .logo-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(36px, 6vw, 72px);
-    font-weight: 700;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: none;
-    position: relative;
-  }
-
-  .logo-title::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0; top: 0;
-    background: none;
-    -webkit-text-fill-color: transparent;
-    filter: blur(18px);
-    opacity: 0.6;
-    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
-    -webkit-background-clip: text;
-    background-clip: text;
-    z-index: -1;
-  }
-
-  .logo-sub {
-    font-size: 13px;
-    letter-spacing: 4px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
-  /* ─── BUTTONS ─── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px 44px;
-    border: none;
-    border-radius: 6px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, var(--neon-cyan), #0088aa);
-    color: #000;
-    box-shadow: 0 0 24px rgba(0,245,255,0.5);
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 40px rgba(0,245,255,0.8);
-  }
-
-  .btn-primary:active { transform: translateY(0); }
-
-  .btn-ghost {
-    background: transparent;
-    border: 2px solid var(--neon-cyan);
-    color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0,245,255,0.2);
-  }
-
-  .btn-ghost:hover {
-    background: rgba(0,245,255,0.1);
-    box-shadow: 0 0 24px rgba(0,245,255,0.4);
-  }
-
-  .btn-gold {
-    background: linear-gradient(135deg, var(--neon-gold), #cc9900);
-    color: #000;
-    box-shadow: 0 0 24px rgba(255,215,0,0.5);
-  }
-
-  .btn-gold:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 40px rgba(255,215,0,0.8);
-  }
-
-  .btn-restart {
-    background: linear-gradient(135deg, var(--neon-magenta), #880066);
-    color: #fff;
-    box-shadow: 0 0 24px rgba(255,0,170,0.5);
-  }
-
-  .btn-restart:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 40px rgba(255,0,170,0.8);
-  }
-
-  /* ─── CARD ─── */
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 40px;
-    backdrop-filter: blur(16px);
-    width: 100%;
-    max-width: 500px;
-  }
-
-  .card-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--neon-cyan);
-    text-align: center;
-    margin-bottom: 32px;
-  }
-
-  /* ─── INPUT ─── */
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 18px;
-  }
-
-  .input-group label {
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
-
-  .input-group input {
-    background: rgba(0,245,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 16px;
-    color: var(--text);
-    font-family: 'Exo 2', sans-serif;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-
-  .input-group input:focus {
-    border-color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0,245,255,0.2);
-  }
-
-  /* ─── COUNTDOWN SCREEN ─── */
-  .countdown-big {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(100px, 20vw, 180px);
-    font-weight: 700;
-    line-height: 1;
-    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: countPulse 1s ease-in-out infinite;
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  @keyframes countPulse {
-    0%   { filter: drop-shadow(0 0 10px rgba(0,245,255,0.4)); transform: scale(1); }
-    50%  { filter: drop-shadow(0 0 40px rgba(0,245,255,0.9)); transform: scale(1.05); }
-    100% { filter: drop-shadow(0 0 10px rgba(0,245,255,0.4)); transform: scale(1); }
-  }
-
-  .countdown-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 22px;
-    letter-spacing: 2px;
-    color: var(--neon-gold);
-    text-align: center;
-    max-width: 520px;
-    line-height: 1.6;
-  }
-
-  .countdown-sublabel {
-    font-size: 14px;
-    color: var(--text-dim);
-    letter-spacing: 2px;
-    margin-top: 12px;
-    text-align: center;
-  }
-
-  /* ─── TIMER BAR ─── */
-  .timer-wrap {
-    width: 100%;
-    max-width: 700px;
-    margin-bottom: 20px;
-  }
-
-  .timer-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-
-  .timer-label {
-    font-size: 13px;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
-  .timer-value {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--neon-cyan);
-    transition: color 0.3s;
-  }
-
+  .timer-wrap { width: 100%; max-width: 700px; margin-bottom: 20px; }
+  .timer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .timer-label { font-size: 13px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; }
+  .timer-value { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 700; color: var(--neon-cyan); transition: color 0.3s; }
   .timer-value.danger { color: var(--col-red); animation: blink 0.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .timer-bar-bg { width: 100%; height: 10px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; }
+  .timer-bar-fill { height: 100%; border-radius: 999px; transition: width 1s linear; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta)); position: relative; overflow: hidden; }
+  .timer-bar-fill::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shine 2s linear infinite; }
+  @keyframes shine { from { left: -100%; } to { left: 100%; } }
+  .timer-bar-fill.danger { background: linear-gradient(90deg, var(--col-red), #ff6600); }
 
-  @keyframes blink {
-    0%,100% { opacity: 1; }
-    50%      { opacity: 0.4; }
-  }
-
-  .timer-bar-bg {
-    width: 100%;
-    height: 10px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 999px;
-    overflow: hidden;
-  }
-
-  .timer-bar-fill {
-    height: 100%;
-    border-radius: 999px;
-    transition: width 1s linear, background-color 0.5s;
-    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
-    position: relative;
-    overflow: hidden;
-  }
-
-  .timer-bar-fill::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: shine 2s linear infinite;
-  }
-
-  @keyframes shine {
-    from { left: -100%; }
-    to   { left: 100%; }
-  }
-
-  .timer-bar-fill.danger {
-    background: linear-gradient(90deg, var(--col-red), #ff6600);
-  }
-
-  /* ─── QUIZ ─── */
-  .quiz-wrap {
-    width: 100%;
-    max-width: 700px;
-  }
-
-  .question-box {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px 32px;
-    margin-bottom: 20px;
-    backdrop-filter: blur(16px);
-  }
-
-  .question-num {
-    font-size: 12px;
-    letter-spacing: 3px;
-    color: var(--neon-magenta);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  .question-text {
-    font-size: clamp(16px, 2.5vw, 22px);
-    font-weight: 600;
-    line-height: 1.5;
-  }
-
-  .choices-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .choice-btn {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 10px;
-    padding: 16px 20px;
-    color: var(--text);
-    font-family: 'Exo 2', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .choice-btn:hover:not(:disabled) {
-    border-color: var(--neon-cyan);
-    background: rgba(0,245,255,0.08);
-    transform: translateY(-1px);
-  }
-
-  .choice-btn.correct {
-    border-color: var(--neon-green);
-    background: rgba(57,255,20,0.15);
-  }
-
-  .choice-btn.wrong {
-    border-color: var(--col-red);
-    background: rgba(255,48,48,0.15);
-  }
-
+  .quiz-wrap { width: 100%; max-width: 700px; }
+  .question-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 20px; backdrop-filter: blur(16px); }
+  .question-num { font-size: 12px; letter-spacing: 3px; color: var(--neon-magenta); text-transform: uppercase; margin-bottom: 10px; }
+  .question-text { font-size: clamp(16px, 2.5vw, 22px); font-weight: 600; line-height: 1.5; }
+  .choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .choice-btn { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 16px 20px; color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; text-align: left; transition: all 0.15s; display: flex; align-items: center; gap: 12px; }
+  .choice-btn:hover:not(:disabled) { border-color: var(--neon-cyan); background: rgba(0,245,255,0.08); transform: translateY(-1px); }
+  .choice-btn.correct { border-color: var(--neon-green); background: rgba(57,255,20,0.15); }
+  .choice-btn.wrong   { border-color: var(--col-red);   background: rgba(255,48,48,0.15); }
   .choice-btn:disabled { cursor: default; }
-
-  .choice-letter {
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--neon-cyan);
-    min-width: 20px;
-  }
-
+  .choice-letter { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; color: var(--neon-cyan); min-width: 20px; }
   .choice-btn.correct .choice-letter { color: var(--neon-green); }
-  .choice-btn.wrong .choice-letter { color: var(--col-red); }
+  .choice-btn.wrong   .choice-letter { color: var(--col-red); }
 
-  .score-badge {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: rgba(255,215,0,0.15);
-    border: 1px solid rgba(255,215,0,0.4);
-    color: var(--neon-gold);
-    margin-left: auto;
-  }
+  .score-display { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 32px; }
+  .score-label  { font-size: 13px; letter-spacing: 4px; color: var(--text-dim); text-transform: uppercase; }
+  .score-number { font-family: 'Rajdhani', sans-serif; font-size: clamp(60px, 10vw, 100px); font-weight: 700; line-height: 1; background: linear-gradient(135deg, var(--neon-gold), #ff8800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px rgba(255,215,0,0.5)); }
+  .score-pts { font-size: 18px; letter-spacing: 3px; color: var(--neon-gold); }
 
-  /* ─── SCORE DISPLAY ─── */
-  .score-display {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  .score-label {
-    font-size: 13px;
-    letter-spacing: 4px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
-  .score-number {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(60px, 10vw, 100px);
-    font-weight: 700;
-    line-height: 1;
-    background: linear-gradient(135deg, var(--neon-gold), #ff8800);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));
-  }
-
-  .score-pts {
-    font-size: 18px;
-    letter-spacing: 3px;
-    color: var(--neon-gold);
-  }
-
-  /* ─── REFLEX GRID ─── */
-  .grid-wrap {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    width: min(60vw, 380px);
-    margin: 0 auto 20px;
-  }
-
-  .grid-cell {
-    aspect-ratio: 1;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    cursor: pointer;
-    transition: transform 0.1s, box-shadow 0.15s;
-    position: relative;
-    overflow: hidden;
-  }
-
+  .grid-wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: min(60vw, 380px); margin: 0 auto 20px; }
+  .grid-cell { aspect-ratio: 1; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: transform 0.1s, box-shadow 0.15s; }
   .grid-cell:hover { transform: scale(1.03); }
+  .grid-cell.active-red    { background: var(--col-red);    border-color: #ff6666; box-shadow: 0 0 20px rgba(255,48,48,0.7);   animation: cellGlow 0.2s ease-out; }
+  .grid-cell.active-blue   { background: var(--col-blue);   border-color: #66aaff; box-shadow: 0 0 20px rgba(26,140,255,0.7);  animation: cellGlow 0.2s ease-out; }
+  .grid-cell.active-green  { background: var(--col-green);  border-color: #88ffbb; box-shadow: 0 0 20px rgba(0,230,118,0.7);   animation: cellGlow 0.2s ease-out; }
+  .grid-cell.active-purple { background: var(--col-purple); border-color: #df99ff; box-shadow: 0 0 20px rgba(191,64,255,0.7);  animation: cellGlow 0.2s ease-out; }
+  .grid-cell.hit { animation: cellHit 0.3s ease-out forwards; }
+  @keyframes cellGlow { from { transform: scale(1.15); } to { transform: scale(1); } }
+  @keyframes cellHit  { 0% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.3; } }
 
-  .grid-cell.active-red {
-    background: var(--col-red);
-    border-color: #ff6666;
-    box-shadow: 0 0 20px rgba(255,48,48,0.7), inset 0 0 20px rgba(255,150,150,0.3);
-    animation: cellGlow 0.2s ease-out;
-  }
-
-  .grid-cell.active-blue {
-    background: var(--col-blue);
-    border-color: #66aaff;
-    box-shadow: 0 0 20px rgba(26,140,255,0.7), inset 0 0 20px rgba(100,180,255,0.3);
-    animation: cellGlow 0.2s ease-out;
-  }
-
-  .grid-cell.active-green {
-    background: var(--col-green);
-    border-color: #88ffbb;
-    box-shadow: 0 0 20px rgba(0,230,118,0.7), inset 0 0 20px rgba(100,255,180,0.3);
-    animation: cellGlow 0.2s ease-out;
-  }
-
-  .grid-cell.active-purple {
-    background: var(--col-purple);
-    border-color: #df99ff;
-    box-shadow: 0 0 20px rgba(191,64,255,0.7), inset 0 0 20px rgba(220,150,255,0.3);
-    animation: cellGlow 0.2s ease-out;
-  }
-
-  .grid-cell.hit {
-    animation: cellHit 0.3s ease-out forwards;
-  }
-
-  @keyframes cellGlow {
-    from { transform: scale(1.15); }
-    to   { transform: scale(1); }
-  }
-
-  @keyframes cellHit {
-    0%   { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(0.9); opacity: 0.3; }
-  }
-
-  /* ─── LEGEND ─── */
-  .legend {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 8px;
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
-
-  .legend-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 3px;
-  }
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-family: 'Rajdhani', sans-serif; font-weight: 600; letter-spacing: 1px; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 3px; }
 
   /* ─── SCOREBOARD ─── */
-  .scoreboard-wrap {
-    width: 100%;
-    max-width: 500px;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-
-  .scoreboard-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 14px 20px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    transition: border-color 0.2s;
-  }
-
-  .scoreboard-row.me {
-    border-color: var(--neon-gold);
-    background: rgba(255,215,0,0.06);
-  }
-
-  .scoreboard-row.top1 { border-color: var(--neon-gold); background: rgba(255,215,0,0.08); }
-  .scoreboard-row.top2 { border-color: #c0c0c0; background: rgba(192,192,192,0.05); }
-  .scoreboard-row.top3 { border-color: #cd7f32; background: rgba(205,127,50,0.05); }
-
-  .rank-num {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    min-width: 32px;
-    color: var(--text-dim);
-  }
-
+  .scoreboard-wrap { width: 100%; max-width: 520px; max-height: 85vh; display: flex; flex-direction: column; }
+  .sb-list { overflow-y: auto; flex: 1; padding-right: 4px; }
+  .scoreboard-row { display: flex; align-items: center; gap: 16px; padding: 14px 20px; border-radius: 10px; margin-bottom: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); }
+  .scoreboard-row.me     { border-color: var(--neon-gold); background: rgba(255,215,0,0.08); }
+  .scoreboard-row.top1   { border-color: var(--neon-gold); background: rgba(255,215,0,0.08); }
+  .scoreboard-row.top2   { border-color: #c0c0c0; background: rgba(192,192,192,0.05); }
+  .scoreboard-row.top3   { border-color: #cd7f32; background: rgba(205,127,50,0.05); }
+  .rank-num { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; min-width: 32px; color: var(--text-dim); }
   .rank-num.gold   { color: var(--neon-gold); }
   .rank-num.silver { color: #c0c0c0; }
   .rank-num.bronze { color: #cd7f32; }
+  .rank-name  { flex: 1; font-weight: 600; font-size: 15px; }
+  .rank-score { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: var(--neon-cyan); }
+  .rank-date  { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .rank-detail { display: flex; flex-direction: column; flex: 1; }
 
-  .rank-name {
-    flex: 1;
-    font-weight: 600;
-    font-size: 15px;
-  }
+  /* API status badge */
+  .api-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 99px; font-size: 12px; letter-spacing: 1px; }
+  .api-badge.ok      { background: rgba(57,255,20,0.1);  border: 1px solid rgba(57,255,20,0.3);  color: var(--neon-green); }
+  .api-badge.error   { background: rgba(255,48,48,0.1);  border: 1px solid rgba(255,48,48,0.3);  color: var(--col-red); }
+  .api-badge.loading { background: rgba(0,245,255,0.08); border: 1px solid rgba(0,245,255,0.2);  color: var(--neon-cyan); }
 
-  .rank-score {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--neon-cyan);
-  }
+  .result-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(28px, 5vw, 48px); font-weight: 700; letter-spacing: 4px; text-transform: uppercase; text-align: center; background: linear-gradient(135deg, var(--neon-gold), var(--neon-magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 24px; animation: pulse 2s ease-in-out infinite; }
+  .divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 24px 0; }
+  .btn-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
-  /* ─── RESULT ─── */
-  .result-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(28px, 5vw, 48px);
-    font-weight: 700;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    text-align: center;
-    background: linear-gradient(135deg, var(--neon-gold), var(--neon-magenta));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 24px;
-    animation: pulse 2s ease-in-out infinite;
-  }
+  .score-pop { position: fixed; pointer-events: none; font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; z-index: 9999; animation: popUp 0.8s ease-out forwards; }
+  @keyframes popUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-80px) scale(1.3); } }
 
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-    margin: 24px 0;
-  }
-
-  /* ─── FLOATING SCORE POP ─── */
-  .score-pop {
-    position: fixed;
-    pointer-events: none;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    z-index: 9999;
-    animation: popUp 0.8s ease-out forwards;
-  }
-
-  @keyframes popUp {
-    0%   { opacity: 1; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-80px) scale(1.3); }
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  /* ─── SCROLL ─── */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
@@ -693,60 +158,63 @@
 <div id="app"></div>
 
 <script>
-// ─── DATA ───────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════
+   AYAR: Cloudflare Worker URL'nizi buraya yazın.
+   Deploy ettikten sonra: https://yarisma-scores.KULLANICIADINIZ.workers.dev
+   ═══════════════════════════════════════════════════════ */
+const WORKER_URL = "https://yarisma-scores.KULLANICIADINIZ.workers.dev";
+
+/* ─── API Helpers ───────────────────────────────────── */
+async function apiSaveScore({ name, email, score, quizScore, reflexScore }) {
+  const res = await fetch(`${WORKER_URL}/scores`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, score, quizScore, reflexScore }),
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json();
+}
+
+async function apiLoadScores() {
+  const res = await fetch(`${WORKER_URL}/scores`);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json(); // array, sorted desc
+}
+
+/* ─── DATA ───────────────────────────────────────────── */
 const QUESTIONS = [
-  {
-    q: "Türkiye'nin başkenti hangi şehirdir?",
-    choices: ["İstanbul", "Ankara", "İzmir", "Bursa"],
-    answer: 1
-  },
-  {
-    q: "Güneş sisteminde kaç gezegen bulunmaktadır?",
-    choices: ["7", "9", "8", "10"],
-    answer: 2
-  },
-  {
-    q: "Suyun kimyasal formülü nedir?",
-    choices: ["CO₂", "NaCl", "O₂", "H₂O"],
-    answer: 3
-  },
-  {
-    q: "Olimpiyat Oyunları kaç yılda bir düzenlenir?",
-    choices: ["4", "2", "6", "8"],
-    answer: 0
-  },
-  {
-    q: "Işığın bir saniyede kat ettiği mesafe nedir (yaklaşık)?",
-    choices: ["150.000 km", "500.000 km", "300.000 km", "100.000 km"],
-    answer: 2
-  }
+  { q: "Türkiye'nin başkenti hangi şehirdir?",               choices: ["İstanbul","Ankara","İzmir","Bursa"],         answer: 1 },
+  { q: "Güneş sisteminde kaç gezegen bulunmaktadır?",        choices: ["7","9","8","10"],                            answer: 2 },
+  { q: "Suyun kimyasal formülü nedir?",                      choices: ["CO₂","NaCl","O₂","H₂O"],                    answer: 3 },
+  { q: "Olimpiyat Oyunları kaç yılda bir düzenlenir?",       choices: ["4","2","6","8"],                             answer: 0 },
+  { q: "Işığın bir saniyede kat ettiği mesafe (yaklaşık)?",  choices: ["150.000 km","500.000 km","300.000 km","100.000 km"], answer: 2 },
 ];
 
 const COLORS = {
-  red:    { label: "Kırmızı", points: 250,  cls: "active-red",    hex: "#ff3030" },
-  blue:   { label: "Mavi",    points: 400,  cls: "active-blue",   hex: "#1a8cff" },
-  green:  { label: "Yeşil",   points: 500,  cls: "active-green",  hex: "#00e676" },
-  purple: { label: "Mor",     points: 750,  cls: "active-purple", hex: "#bf40ff" },
+  red:    { label: "Kırmızı", points: 250, cls: "active-red",    hex: "#ff3030" },
+  blue:   { label: "Mavi",    points: 400, cls: "active-blue",   hex: "#1a8cff" },
+  green:  { label: "Yeşil",   points: 500, cls: "active-green",  hex: "#00e676" },
+  purple: { label: "Mor",     points: 750, cls: "active-purple", hex: "#bf40ff" },
 };
-
 const COLOR_KEYS = Object.keys(COLORS);
 
-// ─── STATE ──────────────────────────────────────────────
+/* ─── STATE ──────────────────────────────────────────── */
 let state = {
-  screen: "intro",       // intro | register | countdown_start | quiz | intermission | reflex | results | scoreboard
+  screen: "intro",
   player: { name: "", surname: "", email: "" },
   score: 0,
+  quizScore: 0,
+  reflexScore: 0,
   quizIndex: 0,
   quizAnswered: false,
-  quizSelected: null,
   quizStartTime: 0,
   quizTimeLeft: 60,
-  interTimerLeft: 30,
+  interTimerLeft: 120,
   reflexTimeLeft: 30,
-  reflexActiveCell: null,   // { index, colorKey, startTime }
   reflexTimeoutId: null,
   countdownVal: 10,
   prevScreen: null,
+  saveStatus: "idle", // idle | saving | saved | error
 };
 
 let timers = [];
@@ -757,64 +225,35 @@ function clearAllTimers() {
   if (state.reflexTimeoutId) { clearTimeout(state.reflexTimeoutId); state.reflexTimeoutId = null; }
 }
 
-// ─── STORAGE HELPERS ────────────────────────────────────
-async function saveScore(name, score) {
-  try {
-    const key = "score:" + Date.now() + ":" + Math.random().toString(36).slice(2);
-    await window.storage.set(key, JSON.stringify({ name, score }), true);
-  } catch(e) { console.warn("Storage error", e); }
-}
-
-async function loadScores() {
-  try {
-    const res = await window.storage.list("score:", true);
-    if (!res) return [];
-    const all = [];
-    for (const k of res.keys) {
-      try {
-        const item = await window.storage.get(k, true);
-        if (item) {
-          const d = JSON.parse(item.value);
-          all.push(d);
-        }
-      } catch(e) {}
-    }
-    return all.sort((a, b) => b.score - a.score);
-  } catch(e) { return []; }
-}
-
-// ─── RENDER ─────────────────────────────────────────────
+/* ─── RENDER ─────────────────────────────────────────── */
 function render() {
   const app = document.getElementById("app");
-  // Remove old screen
   const old = app.querySelector(".screen");
   if (old) old.remove();
-  // Remove old score pops
   document.querySelectorAll(".score-pop").forEach(e => e.remove());
 
   const scr = document.createElement("div");
   scr.className = "screen";
 
   const s = state.screen;
-
-  if (s === "intro")            renderIntro(scr);
-  else if (s === "register")    renderRegister(scr);
-  else if (s === "countdown_start") renderCountdownStart(scr);
-  else if (s === "quiz")        renderQuiz(scr);
-  else if (s === "intermission") renderIntermission(scr);
-  else if (s === "reflex")      renderReflex(scr);
-  else if (s === "results")     renderResults(scr);
-  else if (s === "scoreboard")  renderScoreboard(scr);
+  if      (s === "intro")            renderIntro(scr);
+  else if (s === "register")         renderRegister(scr);
+  else if (s === "countdown_start")  renderCountdownStart(scr);
+  else if (s === "quiz")             renderQuiz(scr);
+  else if (s === "intermission")     renderIntermission(scr);
+  else if (s === "reflex")           renderReflex(scr);
+  else if (s === "results")          renderResults(scr);
+  else if (s === "scoreboard")       renderScoreboard(scr);
 
   app.appendChild(scr);
 }
 
-// ─── INTRO ──────────────────────────────────────────────
+/* ─── INTRO ──────────────────────────────────────────── */
 function renderIntro(scr) {
   scr.innerHTML = `
     <div class="logo-wrap">
       <div class="logo-icon">⚡</div>
-      <div class="logo-title" data-text="HIZ YARIŞMASI">HIZ YARIŞMASI</div>
+      <div class="logo-title">HIZ YARIŞMASI</div>
       <div class="logo-sub">Hız · Zeka · Refleks</div>
     </div>
     <button class="btn btn-primary" id="btn-start">Başla !</button>
@@ -822,7 +261,7 @@ function renderIntro(scr) {
   scr.querySelector("#btn-start").onclick = () => goto("register");
 }
 
-// ─── REGISTER ───────────────────────────────────────────
+/* ─── REGISTER ───────────────────────────────────────── */
 function renderRegister(scr) {
   scr.innerHTML = `
     <div class="card">
@@ -850,14 +289,14 @@ function renderRegister(scr) {
     const surname = scr.querySelector("#inp-surname").value.trim();
     const email   = scr.querySelector("#inp-email").value.trim();
     const err     = scr.querySelector("#reg-err");
-    if (!name || !surname) { err.textContent = "Ad ve soyad alanları zorunludur."; return; }
-    if (!email || !email.includes("@")) { err.textContent = "Geçerli bir e-posta adresi girin."; return; }
+    if (!name || !surname)                  { err.textContent = "Ad ve soyad zorunludur."; return; }
+    if (!email || !email.includes("@"))     { err.textContent = "Geçerli bir e-posta adresi girin."; return; }
     state.player = { name, surname, email };
     goto("countdown_start");
   };
 }
 
-// ─── COUNTDOWN START ────────────────────────────────────
+/* ─── COUNTDOWN START ────────────────────────────────── */
 function renderCountdownStart(scr) {
   state.countdownVal = 10;
   scr.innerHTML = `
@@ -871,21 +310,19 @@ function renderCountdownStart(scr) {
     el.textContent = state.countdownVal;
     if (state.countdownVal <= 0) {
       clearInterval(iv);
-      state.score = 0;
-      state.quizIndex = 0;
+      state.score = 0; state.quizScore = 0; state.reflexScore = 0;
+      state.quizIndex = 0; state.quizTimeLeft = 60;
       goto("quiz");
     }
   }, 1000);
   timers.push(iv);
 }
 
-// ─── QUIZ ───────────────────────────────────────────────
+/* ─── QUIZ ───────────────────────────────────────────── */
 function renderQuiz(scr) {
   state.quizAnswered = false;
   state.quizSelected = null;
   state.quizStartTime = Date.now();
-  if (state.quizTimeLeft === undefined || state.screen === "quiz_init") state.quizTimeLeft = 60;
-
   const q = QUESTIONS[state.quizIndex];
   const letters = ["A","B","C","D"];
 
@@ -896,9 +333,7 @@ function renderQuiz(scr) {
           <span class="timer-label">⏱ Süre</span>
           <span class="timer-value" id="q-timer">${state.quizTimeLeft}s</span>
         </div>
-        <div class="timer-bar-bg">
-          <div class="timer-bar-fill" id="q-bar" style="width:${(state.quizTimeLeft/60)*100}%"></div>
-        </div>
+        <div class="timer-bar-bg"><div class="timer-bar-fill" id="q-bar" style="width:${(state.quizTimeLeft/60)*100}%"></div></div>
       </div>
       <div class="question-box">
         <div class="question-num">Soru ${state.quizIndex+1} / ${QUESTIONS.length}</div>
@@ -907,13 +342,11 @@ function renderQuiz(scr) {
       <div class="choices-grid">
         ${q.choices.map((c,i)=>`
           <button class="choice-btn" data-idx="${i}">
-            <span class="choice-letter">${letters[i]}</span>
-            <span>${c}</span>
-          </button>
-        `).join("")}
+            <span class="choice-letter">${letters[i]}</span><span>${c}</span>
+          </button>`).join("")}
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:18px">
-        <div style="font-size:13px;color:var(--text-dim);letter-spacing:2px">
+        <div style="font-size:13px;color:var(--text-dim);letter-spacing:1px">
           &lt;5s = <span style="color:var(--neon-gold)">1000p</span> &nbsp;
           &lt;10s = <span style="color:#aaa">600p</span> &nbsp;
           +10s = <span style="color:var(--text-dim)">200p</span>
@@ -925,7 +358,6 @@ function renderQuiz(scr) {
     </div>
   `;
 
-  // Timer countdown
   const timerEl = scr.querySelector("#q-timer");
   const barEl   = scr.querySelector("#q-bar");
 
@@ -933,61 +365,46 @@ function renderQuiz(scr) {
     state.quizTimeLeft--;
     if (timerEl) timerEl.textContent = state.quizTimeLeft + "s";
     const pct = (state.quizTimeLeft / 60) * 100;
-    if (barEl) {
-      barEl.style.width = pct + "%";
-      if (state.quizTimeLeft <= 10) {
-        barEl.classList.add("danger");
-        timerEl && timerEl.classList.add("danger");
-      }
+    if (barEl) { barEl.style.width = pct + "%"; }
+    if (state.quizTimeLeft <= 10) {
+      barEl && barEl.classList.add("danger");
+      timerEl && timerEl.classList.add("danger");
     }
-    if (state.quizTimeLeft <= 0) {
-      clearInterval(iv);
-      goto("intermission");
-    }
+    if (state.quizTimeLeft <= 0) { clearInterval(iv); goto("intermission"); }
   }, 1000);
   timers.push(iv);
 
-  // Choice handlers
   scr.querySelectorAll(".choice-btn").forEach(btn => {
     btn.onclick = () => {
       if (state.quizAnswered) return;
       state.quizAnswered = true;
       clearAllTimers();
-
-      const idx = parseInt(btn.dataset.idx);
+      const idx     = parseInt(btn.dataset.idx);
       const elapsed = (Date.now() - state.quizStartTime) / 1000;
-      let pts = 0;
       const correct = idx === q.answer;
-
+      let pts = 0;
       if (correct) {
         pts = elapsed < 5 ? 1000 : elapsed < 10 ? 600 : 200;
-        state.score += pts;
+        state.score += pts; state.quizScore += pts;
         btn.classList.add("correct");
       } else {
         btn.classList.add("wrong");
         scr.querySelectorAll(".choice-btn")[q.answer].classList.add("correct");
       }
-
-      if (pts > 0) showScorePop("+" + pts, correct ? "#ffd700" : "#aaa");
-
+      if (pts > 0) showScorePop("+" + pts, "#ffd700");
       scr.querySelectorAll(".choice-btn").forEach(b => b.disabled = true);
-
       setTimeout(() => {
         state.quizIndex++;
-        if (state.quizIndex >= QUESTIONS.length) {
-          goto("intermission");
-        } else {
-          goto("quiz");
-        }
+        if (state.quizIndex >= QUESTIONS.length) goto("intermission");
+        else goto("quiz");
       }, 1200);
     };
   });
 }
 
-// ─── INTERMISSION ───────────────────────────────────────
+/* ─── INTERMISSION ───────────────────────────────────── */
 function renderIntermission(scr) {
   state.interTimerLeft = 10;
-
   scr.innerHTML = `
     <div class="score-display">
       <div class="score-label">Etap 1 Puanınız</div>
@@ -998,23 +415,19 @@ function renderIntermission(scr) {
     <div class="countdown-label" style="margin-top:8px">⚡ Reflekslerin Hazır mı? ⚡</div>
     <div class="countdown-sublabel">Bir sonraki etap başlamak üzere!</div>
   `;
-
   const el = scr.querySelector("#inter-cd");
   const iv = setInterval(() => {
     state.interTimerLeft--;
     if (el) el.textContent = state.interTimerLeft;
-    if (state.interTimerLeft <= 0) {
-      clearInterval(iv);
-      goto("reflex");
-    }
+    if (state.interTimerLeft <= 0) { clearInterval(iv); goto("reflex"); }
   }, 1000);
   timers.push(iv);
 }
 
-// ─── REFLEX ─────────────────────────────────────────────
+/* ─── REFLEX ─────────────────────────────────────────── */
 function renderReflex(scr) {
   state.reflexTimeLeft = 30;
-  let activeCell = null;  // { index, colorKey, timeout }
+  let done = false;
 
   scr.innerHTML = `
     <div style="width:100%;max-width:520px">
@@ -1023,22 +436,17 @@ function renderReflex(scr) {
           <span class="timer-label">⏱ Refleks Zamanı</span>
           <span class="timer-value" id="rx-timer">30s</span>
         </div>
-        <div class="timer-bar-bg">
-          <div class="timer-bar-fill" id="rx-bar" style="width:100%"></div>
-        </div>
+        <div class="timer-bar-bg"><div class="timer-bar-fill" id="rx-bar" style="width:100%"></div></div>
       </div>
-
       <div class="legend">
         <div class="legend-item"><div class="legend-dot" style="background:#ff3030"></div>Kırmızı = 250p</div>
         <div class="legend-item"><div class="legend-dot" style="background:#1a8cff"></div>Mavi = 400p</div>
         <div class="legend-item"><div class="legend-dot" style="background:#00e676"></div>Yeşil = 500p</div>
         <div class="legend-item"><div class="legend-dot" style="background:#bf40ff"></div>Mor = 750p</div>
       </div>
-
       <div class="grid-wrap" id="grid-wrap">
-        ${Array.from({length:25},(_,i)=>`<div class="grid-cell" data-i="${i}" id="cell-${i}"></div>`).join("")}
+        ${Array.from({length:25},(_,i)=>`<div class="grid-cell" id="cell-${i}"></div>`).join("")}
       </div>
-
       <div style="text-align:center;font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:var(--neon-gold)">
         🏆 <span id="rx-score">${state.score}</span> Puan
       </div>
@@ -1048,89 +456,92 @@ function renderReflex(scr) {
   const timerEl = scr.querySelector("#rx-timer");
   const barEl   = scr.querySelector("#rx-bar");
   const scoreEl = scr.querySelector("#rx-score");
-  let done = false;
 
-  // Main timer
   const mainIv = setInterval(() => {
     state.reflexTimeLeft--;
     if (timerEl) timerEl.textContent = state.reflexTimeLeft + "s";
     const pct = (state.reflexTimeLeft / 30) * 100;
-    if (barEl) {
-      barEl.style.width = pct + "%";
-      if (state.reflexTimeLeft <= 8) {
-        barEl.classList.add("danger");
-        timerEl && timerEl.classList.add("danger");
-      }
+    if (barEl) { barEl.style.width = pct + "%"; }
+    if (state.reflexTimeLeft <= 8) {
+      barEl && barEl.classList.add("danger");
+      timerEl && timerEl.classList.add("danger");
     }
     if (state.reflexTimeLeft <= 0) {
       clearInterval(mainIv);
-      clearTimeout(activeCell?.timeout);
+      clearTimeout(state.reflexTimeoutId);
       done = true;
-      // save & go to results
-      const fullName = state.player.name + " " + state.player.surname;
-      saveScore(fullName, state.score).then(() => goto("results"));
+      state.reflexScore = state.score - state.quizScore;
+      // Skoru kaydet, ardından sonuç ekranına geç
+      saveAndGoResults();
     }
   }, 1000);
   timers.push(mainIv);
 
-  // Reflex scheduler
   function scheduleNext() {
     if (done) return;
-    // random delay between activations: 600ms–1800ms
     const delay = 600 + Math.random() * 1200;
-    const t = setTimeout(() => {
-      if (done) return;
-      activateRandom();
-    }, delay);
-    state.reflexTimeoutId = t;
+    state.reflexTimeoutId = setTimeout(() => { if (!done) activateRandom(); }, delay);
   }
 
   function activateRandom() {
     if (done) return;
-    // pick random cell
-    const idx = Math.floor(Math.random() * 25);
+    const idx      = Math.floor(Math.random() * 25);
     const colorKey = COLOR_KEYS[Math.floor(Math.random() * COLOR_KEYS.length)];
-    const color = COLORS[colorKey];
-    const cellEl = document.getElementById("cell-" + idx);
+    const color    = COLORS[colorKey];
+    const cellEl   = document.getElementById("cell-" + idx);
     if (!cellEl) return;
 
     cellEl.className = "grid-cell " + color.cls;
     let clicked = false;
-
-    // Auto-reset after random window: 700ms–1600ms
     const window_ = 700 + Math.random() * 900;
     const autoReset = setTimeout(() => {
-      if (!clicked) {
-        cellEl.className = "grid-cell";
-        scheduleNext();
-      }
+      if (!clicked) { cellEl.className = "grid-cell"; scheduleNext(); }
     }, window_);
-
-    activeCell = { idx, colorKey, timeout: autoReset };
 
     cellEl.onclick = () => {
       if (clicked || done) return;
       clicked = true;
       clearTimeout(autoReset);
-
-      state.score += color.points;
+      state.score       += color.points;
+      state.reflexScore += color.points;
       if (scoreEl) scoreEl.textContent = state.score;
-
       cellEl.classList.add("hit");
       showScorePop("+" + color.points, color.hex, cellEl);
-
-      setTimeout(() => {
-        if (cellEl) cellEl.className = "grid-cell";
-        scheduleNext();
-      }, 300);
+      setTimeout(() => { if (cellEl) cellEl.className = "grid-cell"; scheduleNext(); }, 300);
     };
   }
 
   scheduleNext();
 }
 
-// ─── RESULTS ────────────────────────────────────────────
+/* ─── SAVE & GO RESULTS ──────────────────────────────── */
+async function saveAndGoResults() {
+  state.saveStatus = "saving";
+  const fullName = state.player.name + " " + state.player.surname;
+  try {
+    await apiSaveScore({
+      name: fullName,
+      email: state.player.email,
+      score: state.score,
+      quizScore: state.quizScore,
+      reflexScore: state.reflexScore,
+    });
+    state.saveStatus = "saved";
+  } catch (e) {
+    console.warn("Skor kaydedilemedi:", e);
+    state.saveStatus = "error";
+  }
+  goto("results");
+}
+
+/* ─── RESULTS ────────────────────────────────────────── */
 function renderResults(scr) {
+  const badgeHtml = state.saveStatus === "saved"
+    ? `<div class="api-badge ok">✓ Skor kaydedildi</div>`
+    : state.saveStatus === "error"
+    ? `<div class="api-badge error">⚠ Skor kaydedilemedi (çevrimdışı?)</div>`
+    : `<div class="api-badge loading">⏳ Kaydediliyor…</div>`;
+
   scr.innerHTML = `
     <div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:500px;gap:8px">
       <div style="font-size:48px">🏆</div>
@@ -1138,6 +549,18 @@ function renderResults(scr) {
       <div class="score-label">${state.player.name} ${state.player.surname}</div>
       <div class="score-number">${state.score}</div>
       <div class="score-pts">PUAN</div>
+      <div style="display:flex;gap:20px;margin-top:4px">
+        <div style="text-align:center">
+          <div style="font-size:11px;letter-spacing:2px;color:var(--text-dim)">QUIZ</div>
+          <div style="font-family:Rajdhani,sans-serif;font-size:22px;font-weight:700;color:var(--neon-cyan)">${state.quizScore}</div>
+        </div>
+        <div style="width:1px;background:var(--border)"></div>
+        <div style="text-align:center">
+          <div style="font-size:11px;letter-spacing:2px;color:var(--text-dim)">REFLEKS</div>
+          <div style="font-family:Rajdhani,sans-serif;font-size:22px;font-weight:700;color:var(--neon-magenta)">${state.score - state.quizScore}</div>
+        </div>
+      </div>
+      <div style="margin-top:8px">${badgeHtml}</div>
       <div class="divider"></div>
       <div class="btn-row">
         <button class="btn btn-gold" id="btn-scoreboard">🏅 Skor Tablosu</button>
@@ -1146,41 +569,35 @@ function renderResults(scr) {
     </div>
   `;
   scr.querySelector("#btn-scoreboard").onclick = () => goto("scoreboard");
-  scr.querySelector("#btn-restart").onclick    = () => {
-    state.score = 0;
-    state.quizIndex = 0;
-    state.quizTimeLeft = 60;
-    goto("intro");
-  };
+  scr.querySelector("#btn-restart").onclick    = resetAndIntro;
 }
 
-// ─── SCOREBOARD ─────────────────────────────────────────
+/* ─── SCOREBOARD ─────────────────────────────────────── */
 function renderScoreboard(scr) {
   scr.innerHTML = `
     <div class="scoreboard-wrap">
-      <div class="card-title" style="margin-bottom:20px">🏅 Skor Tablosu</div>
-      <div id="sb-list"><div style="text-align:center;color:var(--text-dim);padding:40px">Yükleniyor…</div></div>
-      <div class="divider"></div>
+      <div class="card-title" style="margin-bottom:8px">🏅 Skor Tablosu</div>
+      <div id="sb-status" style="text-align:center;margin-bottom:12px">
+        <span class="api-badge loading">⏳ Yükleniyor…</span>
+      </div>
+      <div class="sb-list" id="sb-list"></div>
+      <div class="divider" style="margin:16px 0"></div>
       <div class="btn-row">
         <button class="btn btn-ghost" id="btn-back-res">← Geri</button>
         <button class="btn btn-restart" id="btn-restart2">🔄 Yeniden Başlayalım</button>
       </div>
     </div>
   `;
-
-  scr.querySelector("#btn-back-res").onclick = () => goto("results");
-  scr.querySelector("#btn-restart2").onclick = () => {
-    state.score = 0;
-    state.quizIndex = 0;
-    state.quizTimeLeft = 60;
-    goto("intro");
-  };
+  scr.querySelector("#btn-back-res").onclick  = () => goto("results");
+  scr.querySelector("#btn-restart2").onclick  = resetAndIntro;
 
   const myName = state.player.name + " " + state.player.surname;
+  const statusEl = document.getElementById("sb-status");
+  const listEl   = document.getElementById("sb-list");
 
-  loadScores().then(scores => {
-    const listEl = document.getElementById("sb-list");
+  apiLoadScores().then(scores => {
     if (!listEl) return;
+    statusEl.innerHTML = `<span class="api-badge ok">✓ ${scores.length} kayıt</span>`;
 
     if (scores.length === 0) {
       listEl.innerHTML = `<div style="text-align:center;color:var(--text-dim);padding:20px">Henüz kayıt yok.</div>`;
@@ -1188,21 +605,27 @@ function renderScoreboard(scr) {
     }
 
     const top10 = scores.slice(0, 10);
-    let myRank = scores.findIndex(s => s.name === myName && s.score === state.score) + 1;
+    const myRank = scores.findIndex(s => s.name === myName && s.score === state.score) + 1;
 
-    const rankLabel = (i) => {
+    const rankLabel = i => {
       if (i === 1) return `<span class="rank-num gold">🥇</span>`;
       if (i === 2) return `<span class="rank-num silver">🥈</span>`;
       if (i === 3) return `<span class="rank-num bronze">🥉</span>`;
       return `<span class="rank-num">${i}.</span>`;
     };
+    const rowClass = i => {
+      const b = "scoreboard-row";
+      if (i === 1) return b + " top1";
+      if (i === 2) return b + " top2";
+      if (i === 3) return b + " top3";
+      return b;
+    };
 
-    const rowClass = (i) => {
-      const base = "scoreboard-row";
-      if (i === 1) return base + " top1";
-      if (i === 2) return base + " top2";
-      if (i === 3) return base + " top3";
-      return base;
+    const formatDate = iso => {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleDateString("tr-TR", { day:"2-digit", month:"2-digit", year:"numeric" });
+      } catch { return ""; }
     };
 
     let html = top10.map((s, i) => {
@@ -1210,60 +633,69 @@ function renderScoreboard(scr) {
       const isMe = s.name === myName && s.score === state.score;
       return `<div class="${rowClass(rank)}${isMe ? " me" : ""}">
         ${rankLabel(rank)}
-        <span class="rank-name">${s.name}${isMe ? " <span style='color:var(--neon-cyan);font-size:11px'>★ SEN</span>" : ""}</span>
-        <span class="rank-score">${s.score.toLocaleString()}</span>
+        <div class="rank-detail">
+          <div class="rank-name">${s.name}${isMe ? ` <span style="color:var(--neon-cyan);font-size:11px">★ SEN</span>` : ""}</div>
+          ${s.date ? `<div class="rank-date">${formatDate(s.date)}</div>` : ""}
+        </div>
+        <div style="text-align:right">
+          <div class="rank-score">${s.score.toLocaleString("tr-TR")}</div>
+          ${s.quizScore ? `<div style="font-size:11px;color:var(--text-dim)">Q:${s.quizScore} R:${s.reflexScore||s.score-s.quizScore}</div>` : ""}
+        </div>
       </div>`;
     }).join("");
 
     if (myRank > 10) {
-      const mySc = scores[myRank - 1];
+      const me = scores[myRank - 1];
       html += `<div style="text-align:center;color:var(--text-dim);font-size:13px;padding:8px 0">· · ·</div>`;
       html += `<div class="scoreboard-row me">
         <span class="rank-num" style="color:var(--neon-cyan)">${myRank}.</span>
-        <span class="rank-name">${mySc?.name || myName} <span style='color:var(--neon-cyan);font-size:11px'>★ SEN</span></span>
-        <span class="rank-score">${state.score.toLocaleString()}</span>
+        <div class="rank-detail">
+          <div class="rank-name">${me?.name || myName} <span style="color:var(--neon-cyan);font-size:11px">★ SEN</span></div>
+        </div>
+        <div class="rank-score">${state.score.toLocaleString("tr-TR")}</div>
       </div>`;
     }
 
     listEl.innerHTML = html;
+  }).catch(err => {
+    if (statusEl) statusEl.innerHTML = `<span class="api-badge error">⚠ Yüklenemedi: ${err.message}</span>`;
+    if (listEl)   listEl.innerHTML   = `<div style="text-align:center;color:var(--text-dim);padding:20px">Bağlantı hatası — Worker URL'sini kontrol edin.</div>`;
   });
 }
 
-// ─── SCORE POP ──────────────────────────────────────────
+/* ─── HELPERS ────────────────────────────────────────── */
 function showScorePop(text, color, refEl) {
   const pop = document.createElement("div");
   pop.className = "score-pop";
   pop.textContent = text;
   pop.style.color = color || "#ffd700";
-
   if (refEl) {
-    const rect = refEl.getBoundingClientRect();
-    pop.style.left = (rect.left + rect.width/2 - 30) + "px";
-    pop.style.top  = (rect.top - 10) + "px";
+    const r = refEl.getBoundingClientRect();
+    pop.style.left = (r.left + r.width/2 - 30) + "px";
+    pop.style.top  = (r.top - 10) + "px";
   } else {
-    pop.style.left = "50%";
-    pop.style.top  = "40%";
-    pop.style.transform = "translateX(-50%)";
+    pop.style.left = "50%"; pop.style.top = "40%"; pop.style.transform = "translateX(-50%)";
   }
-
   document.body.appendChild(pop);
   setTimeout(() => pop.remove(), 900);
 }
 
-// ─── TRANSITION ─────────────────────────────────────────
+function resetAndIntro() {
+  state.score = 0; state.quizScore = 0; state.reflexScore = 0;
+  state.quizIndex = 0; state.quizTimeLeft = 60;
+  state.saveStatus = "idle";
+  goto("intro");
+}
+
 function goto(screen) {
   clearAllTimers();
-  if (screen === "quiz") {
-    if (state.prevScreen !== "quiz") {
-      state.quizTimeLeft = 60;
-    }
-  }
+  if (screen === "quiz" && state.prevScreen !== "quiz") state.quizTimeLeft = 60;
   state.prevScreen = state.screen;
   state.screen = screen;
   render();
 }
 
-// ─── INIT ────────────────────────────────────────────────
+/* ─── BOOT ───────────────────────────────────────────── */
 render();
 </script>
 </body>
