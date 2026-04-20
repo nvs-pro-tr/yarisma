@@ -175,11 +175,11 @@ async function apiSaveScore({ name, email, score, quizScore, reflexScore }) {
 }
 
 async function apiLoadScores() {
-  const res = await fetch(`/api/scores`); // Sadece /api/scores
+  const res = await fetch(`/api/scores`);
   if (!res.ok) throw new Error("HTTP " + res.status);
-  return res.json();
+  return res.json(); 
 }
-
+ 
 /* ─── DATA ───────────────────────────────────────────── */
 const QUESTIONS = [
   { q: "Türkiye'nin başkenti hangi şehirdir?",               choices: ["İstanbul","Ankara","İzmir","Bursa"],         answer: 1 },
@@ -591,8 +591,8 @@ function renderScoreboard(scr) {
   scr.querySelector("#btn-restart2").onclick  = resetAndIntro;
 
   const myName = state.player.name + " " + state.player.surname;
-  const statusEl = document.getElementById("sb-status");
-  const listEl   = document.getElementById("sb-list");
+  const statusEl = scr.querySelector("#sb-status");
+  const listEl   = scr.querySelector("#sb-list");
 
   apiLoadScores().then(scores => {
     if (!listEl) return;
