@@ -160,11 +160,12 @@
    AYAR: Cloudflare Worker URL'nizi buraya yazın.
    Deploy ettikten sonra: https://yarisma-scores.KULLANICIADINIZ.workers.dev
    ═══════════════════════════════════════════════════════ */
-const WORKER_URL = "https://yarisma-scores.KULLANICIADINIZ.workers.dev";
+/* const WORKER_URL = "https://yarisma-scores.KULLANICIADINIZ.workers.dev";
 
 /* ─── API Helpers ───────────────────────────────────── */
 async function apiSaveScore({ name, email, score, quizScore, reflexScore }) {
-  const res = await fetch(`${WORKER_URL}/scores`, {
+  // Sadece /api/scores yazman yeterli, çünkü oyunla aynı domainde (yarisma.pages.dev) çalışıyor.
+  const res = await fetch(`/api/scores`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, email, score, quizScore, reflexScore }),
@@ -174,9 +175,9 @@ async function apiSaveScore({ name, email, score, quizScore, reflexScore }) {
 }
 
 async function apiLoadScores() {
-  const res = await fetch(`${WORKER_URL}/scores`);
+  const res = await fetch(`/api/scores`); // Sadece /api/scores
   if (!res.ok) throw new Error("HTTP " + res.status);
-  return res.json(); // array, sorted desc
+  return res.json();
 }
 
 /* ─── DATA ───────────────────────────────────────────── */
