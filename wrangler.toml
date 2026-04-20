@@ -6,9 +6,9 @@ compatibility_date = "2024-01-01"
 # 1) `npx wrangler kv namespace create SCORES` komutunu çalıştır
 # 2) Çıktıdaki id değerini buraya yapıştır
 [[kv_namespaces]]
-binding = "SCORES"
-id      = "BURAYA_KV_NAMESPACE_ID_YAZ"
+binding = "yarisma_scores"
+id      = "578f2a8517fa477b8f521a6deb49c16c"
 
 # Preview (local test) için:
-# id      = "BURAYA_KV_NAMESPACE_ID_YAZ"
+# id      = "578f2a8517fa477b8f521a6deb49c16c"
 # preview_id = "BURAYA_PREVIEW_ID_YAZ"
