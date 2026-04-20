@@ -688,12 +688,15 @@ function resetAndIntro() {
 
 function goto(screen) {
   clearAllTimers();
-  if (screen === "quiz" && state.prevScreen !== "quiz") state.quizTimeLeft = 60;
+  
+  if (screen === "quiz" && state.screen !== "quiz") {
+    state.quizTimeLeft = 60;
+  }
+  
   state.prevScreen = state.screen;
   state.screen = screen;
   render();
 }
-
 /* ─── BOOT ───────────────────────────────────────────── */
 render();
 </script>
