@@ -1,12 +1,10 @@
-name       = "yarisma-scores"
-main       = "worker.js"
+name = "yarisma-scores"
 compatibility_date = "2024-01-01"
 
-# KV namespace — deploy ettikten sonra aşağıdaki id'yi gerçek id ile değiştir:
-# 1) `npx wrangler kv namespace create SCORES` komutunu çalıştır
-# 2) Çıktıdaki id değerini buraya yapıştır
+# Pages Functions kullandığın için 'main' satırına gerek yok.
+
 [[kv_namespaces]]
-binding = "yarisma_scores"
+binding = "SCORES"  # Burası scores.js içindeki 'env.SCORES' ile aynı olmalı
 id      = "578f2a8517fa477b8f521a6deb49c16c"
 
 # Preview (local test) için:
