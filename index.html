@@ -269,13 +269,9 @@ function renderRegister(scr) {
         <label>Ad</label>
         <input type="text" id="inp-name" placeholder="Adınız" value="${state.player.name}" autocomplete="off"/>
       </div>
-      <div class="input-group">
+      <div class="input-group" style="margin-bottom:28px">
         <label>Soyad</label>
         <input type="text" id="inp-surname" placeholder="Soyadınız" value="${state.player.surname}" autocomplete="off"/>
-      </div>
-      <div class="input-group" style="margin-bottom:28px">
-        <!-- <label>E-posta</label> -->
-       <!-- <input type="email" id="inp-email" placeholder="eposta@ornek.com" value="${state.player.email}" autocomplete="off"/> -->
       </div>
       <div style="display:flex;justify-content:center">
         <button class="btn btn-primary" id="btn-go">Haydi Başlayalım !</button>
@@ -283,18 +279,28 @@ function renderRegister(scr) {
       <div id="reg-err" style="text-align:center;color:#ff5555;margin-top:12px;font-size:14px;min-height:20px"></div>
     </div>
   `;
+  
   scr.querySelector("#btn-go").onclick = () => {
     const name    = scr.querySelector("#inp-name").value.trim();
     const surname = scr.querySelector("#inp-surname").value.trim();
-    const email   = "";
+    
+    // Veritabanı kayıt aşamasında hata vermemesi için e-postayı sabit ve boş bir metin olarak tanımlıyoruz
+    const email   = ""; 
+    
     const err     = scr.querySelector("#reg-err");
-    if (!name || !surname)                  { err.textContent = "Ad ve soyad zorunludur."; return; }
-    if (!email || !email.includes("@"))     { err.textContent = "Geçerli bir e-posta adresi girin."; return; }
+    
+    // Sadece Ad ve Soyad kontrolü yapıyoruz
+    if (!name || !surname) { 
+      err.textContent = "Ad ve soyad zorunludur."; 
+      return; 
+    }
+    
+    // E-posta denetim satırı tamamen kaldırıldı
+    
     state.player = { name, surname, email };
     goto("countdown_start");
   };
 }
-
 /* ─── COUNTDOWN START ────────────────────────────────── */
 function renderCountdownStart(scr) {
   state.countdownVal = 10;
