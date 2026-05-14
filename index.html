@@ -102,7 +102,7 @@
   .score-number { font-family: 'Rajdhani', sans-serif; font-size: clamp(60px, 10vw, 100px); font-weight: 700; line-height: 1; background: linear-gradient(135deg, var(--neon-gold), #ff8800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px rgba(255,215,0,0.5)); }
   .score-pts { font-size: 18px; letter-spacing: 3px; color: var(--neon-gold); }
 
-  .grid-wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: min(60vw, 380px); margin: 0 auto 20px; }
+  .grid-wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; width: min(80vw, 500px); margin: 0 auto 20px; }
   .grid-cell { aspect-ratio: 1; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: transform 0.1s, box-shadow 0.15s; }
   .grid-cell:hover { transform: scale(1.03); }
   .grid-cell.active-red    { background: var(--col-red);    border-color: #ff6666; box-shadow: 0 0 20px rgba(255,48,48,0.7);   animation: cellGlow 0.2s ease-out; }
@@ -245,15 +245,36 @@ function render() {
   else if (s === "scoreboard")       renderScoreboard(scr);
 
   app.appendChild(scr);
+ ```javascript
+function render() {
+  // ... mevcut kodlar ...
+  app.appendChild(scr);
+
+  // Giriş ekranı hariç diğer tüm ekranlarda Sol Alta Ana Sayfa butonu ekle
+  if (state.screen !== "intro") {
+    const homeBtn = document.createElement("button");
+    homeBtn.innerHTML = "🏠";
+    homeBtn.style.cssText = "position: absolute; bottom: 20px; left: 20px; z-index: 99; font-size: 24px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,245,255,0.2);";
+    homeBtn.onclick = () => {
+      if (confirm("Yeni bir oyun başlatmak istediğinize emin misiniz? Mevcut ilerleme kaybolacaktır.")) {
+        fullResetAndIntro();
+      }
+    };
+    scr.appendChild(homeBtn);
+  }
+}
 }
 
 /* ─── INTRO ──────────────────────────────────────────── */
 function renderIntro(scr) {
   scr.innerHTML = `
+    <img src="https://www.novartis.com/themes/custom/cosmos/logo.svg" style="position: absolute; top: 24px; left: 24px; max-height: 60px;" alt="Voltaren" />
+    <img src="https://www.novartis.com/themes/custom/cosmos/logo.svg" style="position: absolute; top: 24px; right: 24px; max-height: 60px;" alt="Cataflam" />
+    
     <div class="logo-wrap">
       <div class="logo-icon">⚡</div>
       <div class="logo-title">HIZ YARIŞMASI</div>
-      <div class="logo-sub">Hız · Zeka · Refleks</div>
+      <div class="logo-sub">Soruları Hızla Cevapla · Reflekslerini Tes Et!</div>
     </div>
     <button class="btn btn-primary" id="btn-start">Başla !</button>
   `;
@@ -277,6 +298,15 @@ function renderRegister(scr) {
         <button class="btn btn-primary" id="btn-go">Haydi Başlayalım !</button>
       </div>
       <div id="reg-err" style="text-align:center;color:#ff5555;margin-top:12px;font-size:14px;min-height:20px"></div>
+      <div style="display:flex;justify-content:center">
+        <button class="btn btn-primary" id="btn-go">Haydi Başlayalım !</button>
+      </div>
+      <div id="reg-err" style="text-align:center;color:#ff5555;margin-top:12px;font-size:14px;min-height:20px"></div>
+      
+      <div style="margin-top: 20px; font-size: 12px; color: var(--text-dim); text-align: center; line-height: 1.4;">
+        * Bu uygulama, TUSYAD Bahar Toplantısı kapsamında katılımcı hekimlere yönlik olarak hazırlanmış bir oyundur. Oyunun amacı, katılımcıların eğlenceli ve etkileşimli bir deneyim yaşamasını sağlamaktır. Oyun kapsamında yalnızca liderlik tablosunda skorların gösterilebilmesi amacıyla katılımcıların Ad ve Soyadı bilgisi alınmaktadır. Bu bilgiler herhangi bir şekilde kaydedilmemekte, analiz edilmemekte veya üçüncü kişilerle paylaşılmamaktadır.
+      </div>
+    </div>
     </div>
   `;
   
@@ -360,6 +390,7 @@ function renderQuiz(scr) {
           🏆 ${state.score}
         </div>
       </div>
+      <img src="https://www.novartis.com/themes/custom/cosmos/mobile_logo.svg" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); max-height: 50px;" alt="Logo" />
     </div>
   `;
 
@@ -455,6 +486,7 @@ function renderReflex(scr) {
       <div style="text-align:center;font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:var(--neon-gold)">
         🏆 <span id="rx-score">${state.score}</span> Puan
       </div>
+      <img src="https://www.novartis.com/themes/custom/cosmos/mobile_logo.svg" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); max-height: 50px;" alt="Logo" />
     </div>
   `;
 
@@ -484,7 +516,7 @@ function renderReflex(scr) {
 
   function scheduleNext() {
     if (done) return;
-    const delay = 600 + Math.random() * 1200;
+    const delay = 300 + Math.random() * 400;
     state.reflexTimeoutId = setTimeout(() => { if (!done) activateRandom(); }, delay);
   }
 
@@ -498,7 +530,7 @@ function renderReflex(scr) {
 
     cellEl.className = "grid-cell " + color.cls;
     let clicked = false;
-    const window_ = 700 + Math.random() * 900;
+    const window_ = 600 + Math.random() * 800;
     const autoReset = setTimeout(() => {
       if (!clicked) { cellEl.className = "grid-cell"; scheduleNext(); }
     }, window_);
@@ -570,11 +602,13 @@ function renderResults(scr) {
       <div class="btn-row">
         <button class="btn btn-gold" id="btn-scoreboard">🏅 Skor Tablosu</button>
         <button class="btn btn-restart" id="btn-restart">🔄 Yeniden Başlayalım</button>
+        <button class="btn btn-ghost" id="btn-new-game">🆕 Yeni Oyun</button>
       </div>
     </div>
   `;
   scr.querySelector("#btn-scoreboard").onclick = () => goto("scoreboard");
   scr.querySelector("#btn-restart").onclick    = resetAndIntro;
+  scr.querySelector("#btn-new-game").onclick   = fullResetAndIntro;
 }
 
 /* ─── SCOREBOARD ─────────────────────────────────────── */
@@ -589,12 +623,14 @@ function renderScoreboard(scr) {
       <div class="divider" style="margin:16px 0"></div>
       <div class="btn-row">
         <button class="btn btn-ghost" id="btn-back-res">← Geri</button>
-        <button class="btn btn-restart" id="btn-restart2">🔄 Yeniden Başlayalım</button>
+        <button class="btn btn-restart" id="btn-restart2">🔄 Tekrar Denemek İster Misin?</button>
+        <button class="btn btn-ghost" id="btn-new-game2" style="border-color:var(--col-red); color:var(--col-red)">🆕 Yeni Oyun</button>
       </div>
     </div>
   `;
   scr.querySelector("#btn-back-res").onclick  = () => goto("results");
   scr.querySelector("#btn-restart2").onclick  = resetAndIntro;
+  scr.querySelector("#btn-new-game2").onclick = fullResetAndIntro;
 
   const myName = state.player.name + " " + state.player.surname;
   const statusEl = scr.querySelector("#sb-status");
@@ -692,6 +728,15 @@ function resetAndIntro() {
   goto("intro");
 }
 
+function fullResetAndIntro() {
+  // Oyuncu verilerini, skorları ve süreleri tamamen sıfırla
+  state.player = { name: "", surname: "", email: "" };
+  state.score = 0; state.quizScore = 0; state.reflexScore = 0;
+  state.quizIndex = 0; state.quizTimeLeft = 60;
+  state.saveStatus = "idle";
+  goto("intro");
+} 
+ 
 function goto(screen) {
   clearAllTimers();
   
