@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Hız Yarışması</title>
-<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link href="[https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Rajdhani:wght@400;600;700&display=swap](https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Rajdhani:wght@400;600;700&display=swap)" rel="stylesheet"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,7 +23,6 @@
     --col-blue: #1a8cff;
     --col-green: #00e676;
     --col-purple: #bf40ff;
-
   }
 
   html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Exo 2', sans-serif; overflow: hidden; }
@@ -45,7 +44,7 @@
   .logo-icon { font-size: 64px; animation: pulse 2s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { filter: drop-shadow(0 0 16px var(--neon-cyan)); } 50% { filter: drop-shadow(0 0 40px var(--neon-cyan)); } }
   .logo-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(36px, 6vw, 72px); font-weight: 700; letter-spacing: 6px; text-transform: uppercase; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .logo-sub { font-size: 13px; letter-spacing: 4px; color: var(--text-dim); text-transform: uppercase; }
+  .logo-sub { font-size: 13px; letter-spacing: 4px; color: var(--text-dim); text-transform: uppercase; text-align: center; }
 
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 44px; border: none; border-radius: 6px; font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
   .btn-primary { background: linear-gradient(135deg, var(--neon-cyan), #0088aa); color: #000; box-shadow: 0 0 24px rgba(0,245,255,0.5); }
@@ -83,7 +82,7 @@
   @keyframes shine { from { left: -100%; } to { left: 100%; } }
   .timer-bar-fill.danger { background: linear-gradient(90deg, var(--col-red), #ff6600); }
 
-  .quiz-wrap { width: 100%; max-width: 700px; }
+  .quiz-wrap { width: 100%; max-width: 700px; position: relative; padding-bottom: 80px; }
   .question-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 20px; backdrop-filter: blur(16px); }
   .question-num { font-size: 12px; letter-spacing: 3px; color: var(--neon-magenta); text-transform: uppercase; margin-bottom: 10px; }
   .question-text { font-size: clamp(16px, 2.5vw, 22px); font-weight: 600; line-height: 1.5; }
@@ -156,15 +155,8 @@
 <div id="app"></div>
 
 <script>
-/* ═══════════════════════════════════════════════════════
-   AYAR: Cloudflare Worker URL'nizi buraya yazın.
-   Deploy ettikten sonra: https://yarisma-scores.KULLANICIADINIZ.workers.dev
-   ═══════════════════════════════════════════════════════ */
-/* const WORKER_URL = "https://yarisma-scores.KULLANICIADINIZ.workers.dev";
-
 /* ─── API Helpers ───────────────────────────────────── */
 async function apiSaveScore({ name, email, score, quizScore, reflexScore }) {
-  // Sadece /api/scores yazman yeterli, çünkü oyunla aynı domainde (yarisma.pages.dev) çalışıyor.
   const res = await fetch(`/api/scores`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -208,12 +200,12 @@ let state = {
   quizAnswered: false,
   quizStartTime: 0,
   quizTimeLeft: 60,
-  interTimerLeft: 120,
+  interTimerLeft: 10,
   reflexTimeLeft: 30,
   reflexTimeoutId: null,
   countdownVal: 10,
   prevScreen: null,
-  saveStatus: "idle", // idle | saving | saved | error
+  saveStatus: "idle", 
 };
 
 let timers = [];
@@ -245,16 +237,15 @@ function render() {
   else if (s === "scoreboard")       renderScoreboard(scr);
 
   app.appendChild(scr);
- ```javascript
-function render() {
-  // ... mevcut kodlar ...
-  app.appendChild(scr);
 
-  // Giriş ekranı hariç diğer tüm ekranlarda Sol Alta Ana Sayfa butonu ekle
+  // Giriş ekranı hariç diğer tüm ekranlarda Sol Alta Ana Sayfa (Sıfırla) butonu ekle
   if (state.screen !== "intro") {
     const homeBtn = document.createElement("button");
     homeBtn.innerHTML = "🏠";
-    homeBtn.style.cssText = "position: absolute; bottom: 20px; left: 20px; z-index: 99; font-size: 24px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,245,255,0.2);";
+    homeBtn.title = "Ana Sayfa (Yeni Oyun)";
+    homeBtn.style.cssText = "position: absolute; bottom: 20px; left: 20px; z-index: 99; font-size: 24px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,245,255,0.2); transition: transform 0.2s;";
+    homeBtn.onmouseover = () => homeBtn.style.transform = "scale(1.1)";
+    homeBtn.onmouseout  = () => homeBtn.style.transform = "scale(1)";
     homeBtn.onclick = () => {
       if (confirm("Yeni bir oyun başlatmak istediğinize emin misiniz? Mevcut ilerleme kaybolacaktır.")) {
         fullResetAndIntro();
@@ -263,18 +254,17 @@ function render() {
     scr.appendChild(homeBtn);
   }
 }
-}
 
 /* ─── INTRO ──────────────────────────────────────────── */
 function renderIntro(scr) {
   scr.innerHTML = `
-    <img src="https://www.novartis.com/themes/custom/cosmos/logo.svg" style="position: absolute; top: 24px; left: 24px; max-height: 60px;" alt="Voltaren" />
-    <img src="https://www.novartis.com/themes/custom/cosmos/logo.svg" style="position: absolute; top: 24px; right: 24px; max-height: 60px;" alt="Cataflam" />
+    <img src="[https://www.novartis.com/themes/custom/cosmos/logo.svg](https://www.novartis.com/themes/custom/cosmos/logo.svg)" style="position: absolute; top: 24px; left: 24px; max-height: 60px;" alt="Voltaren" />
+    <img src="[https://www.novartis.com/themes/custom/cosmos/logo.svg](https://www.novartis.com/themes/custom/cosmos/logo.svg)" style="position: absolute; top: 24px; right: 24px; max-height: 60px;" alt="Cataflam" />
     
     <div class="logo-wrap">
       <div class="logo-icon">⚡</div>
       <div class="logo-title">HIZ YARIŞMASI</div>
-      <div class="logo-sub">Soruları Hızla Cevapla · Reflekslerini Tes Et!</div>
+      <div class="logo-sub">Soruları Hızla Cevapla · Reflekslerini Test Et!</div>
     </div>
     <button class="btn btn-primary" id="btn-start">Başla !</button>
   `;
@@ -298,39 +288,29 @@ function renderRegister(scr) {
         <button class="btn btn-primary" id="btn-go">Haydi Başlayalım !</button>
       </div>
       <div id="reg-err" style="text-align:center;color:#ff5555;margin-top:12px;font-size:14px;min-height:20px"></div>
-      <div style="display:flex;justify-content:center">
-        <button class="btn btn-primary" id="btn-go">Haydi Başlayalım !</button>
-      </div>
-      <div id="reg-err" style="text-align:center;color:#ff5555;margin-top:12px;font-size:14px;min-height:20px"></div>
       
       <div style="margin-top: 20px; font-size: 12px; color: var(--text-dim); text-align: center; line-height: 1.4;">
-        * Bu uygulama, TUSYAD Bahar Toplantısı kapsamında katılımcı hekimlere yönlik olarak hazırlanmış bir oyundur. Oyunun amacı, katılımcıların eğlenceli ve etkileşimli bir deneyim yaşamasını sağlamaktır. Oyun kapsamında yalnızca liderlik tablosunda skorların gösterilebilmesi amacıyla katılımcıların Ad ve Soyadı bilgisi alınmaktadır. Bu bilgiler herhangi bir şekilde kaydedilmemekte, analiz edilmemekte veya üçüncü kişilerle paylaşılmamaktadır.
+        * Bu uygulama, TUSYAD Bahar Toplantısı kapsamında katılımcı hekimlere yönelik olarak hazırlanmış bir oyundur. Oyunun amacı, katılımcıların eğlenceli ve etkileşimli bir deneyim yaşamasını sağlamaktır. Oyun kapsamında yalnızca liderlik tablosunda skorların gösterilebilmesi amacıyla katılımcıların Ad ve Soyadı bilgisi alınmaktadır. Bu bilgiler herhangi bir şekilde kaydedilmemekte, analiz edilmemekte veya üçüncü kişilerle paylaşılmamaktadır.
       </div>
-    </div>
     </div>
   `;
   
   scr.querySelector("#btn-go").onclick = () => {
     const name    = scr.querySelector("#inp-name").value.trim();
     const surname = scr.querySelector("#inp-surname").value.trim();
-    
-    // Veritabanı kayıt aşamasında hata vermemesi için e-postayı sabit ve boş bir metin olarak tanımlıyoruz
     const email   = ""; 
-    
     const err     = scr.querySelector("#reg-err");
     
-    // Sadece Ad ve Soyad kontrolü yapıyoruz
     if (!name || !surname) { 
       err.textContent = "Ad ve soyad zorunludur."; 
       return; 
     }
     
-    // E-posta denetim satırı tamamen kaldırıldı
-    
     state.player = { name, surname, email };
     goto("countdown_start");
   };
 }
+
 /* ─── COUNTDOWN START ────────────────────────────────── */
 function renderCountdownStart(scr) {
   state.countdownVal = 10;
@@ -390,7 +370,7 @@ function renderQuiz(scr) {
           🏆 ${state.score}
         </div>
       </div>
-      <img src="https://www.novartis.com/themes/custom/cosmos/mobile_logo.svg" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); max-height: 50px;" alt="Logo" />
+      <img src="[https://www.novartis.com/themes/custom/cosmos/mobile_logo.svg](https://www.novartis.com/themes/custom/cosmos/mobile_logo.svg)" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); max-height: 50px;" alt="Logo" />
     </div>
   `;
 
@@ -466,7 +446,7 @@ function renderReflex(scr) {
   let done = false;
 
   scr.innerHTML = `
-    <div style="width:100%;max-width:520px">
+    <div style="width:100%;max-width:520px;position:relative;padding-bottom:80px">
       <div class="timer-wrap">
         <div class="timer-header">
           <span class="timer-label">⏱ Refleks Zamanı</span>
@@ -486,7 +466,7 @@ function renderReflex(scr) {
       <div style="text-align:center;font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:var(--neon-gold)">
         🏆 <span id="rx-score">${state.score}</span> Puan
       </div>
-      <img src="https://www.novartis.com/themes/custom/cosmos/mobile_logo.svg" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); max-height: 50px;" alt="Logo" />
+      <img src="[https://www.novartis.com/themes/custom/cosmos/mobile_logo.svg](https://www.novartis.com/themes/custom/cosmos/mobile_logo.svg)" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); max-height: 50px;" alt="Logo" />
     </div>
   `;
 
@@ -508,7 +488,6 @@ function renderReflex(scr) {
       clearTimeout(state.reflexTimeoutId);
       done = true;
       state.reflexScore = state.score - state.quizScore;
-      // Skoru kaydet, ardından sonuç ekranına geç
       saveAndGoResults();
     }
   }, 1000);
@@ -700,7 +679,7 @@ function renderScoreboard(scr) {
     listEl.innerHTML = html;
   }).catch(err => {
     if (statusEl) statusEl.innerHTML = `<span class="api-badge error">⚠ Yüklenemedi: ${err.message}</span>`;
-    if (listEl)   listEl.innerHTML   = `<div style="text-align:center;color:var(--text-dim);padding:20px">Bağlantı hatası — Worker URL'sini kontrol edin.</div>`;
+    if (listEl)   listEl.innerHTML   = `<div style="text-align:center;color:var(--text-dim);padding:20px">Bağlantı hatası — API rotasını kontrol edin.</div>`;
   });
 }
 
@@ -729,7 +708,6 @@ function resetAndIntro() {
 }
 
 function fullResetAndIntro() {
-  // Oyuncu verilerini, skorları ve süreleri tamamen sıfırla
   state.player = { name: "", surname: "", email: "" };
   state.score = 0; state.quizScore = 0; state.reflexScore = 0;
   state.quizIndex = 0; state.quizTimeLeft = 60;
@@ -739,15 +717,14 @@ function fullResetAndIntro() {
  
 function goto(screen) {
   clearAllTimers();
-  
   if (screen === "quiz" && state.screen !== "quiz") {
     state.quizTimeLeft = 60;
   }
-  
   state.prevScreen = state.screen;
   state.screen = screen;
   render();
 }
+
 /* ─── BOOT ───────────────────────────────────────────── */
 render();
 </script>
