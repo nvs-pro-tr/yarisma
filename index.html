@@ -174,7 +174,7 @@ async function apiLoadScores() {
  
 /* ─── DATA ───────────────────────────────────────────── */
 const QUESTIONS = [
-  { q: "Travma sonrası ve postoperatif enflamatuvar durumlarında Voltaren için hangisi doğrudur?",               choices: ["Sadece Spontan Ağrıyı Azaltır","Sadece Harekete Bağlı Ağrıyı Azaltır","Hem Spontan Hem Harekete Bağlı Ağrıyı Hızla Dindirir","Sadece kas Spazmını Çözer"],         answer: 2 },
+  { q: "Travma sonrası ve postoperatif enflamatuvar durumlarında Voltaren için hangisi doğrudur?",               choices: ["Sadece Spontan Ağrıyı Azaltır","Sadece Harekete Bağlı Ağrıyı Azaltır","Hem Spontan Hem Harekete Bağlı Ağrıyı Hızla Dindirir","Sadece kas Spazmını Çözer"],         answer: 2, ref: "Referanslar: 1. Voltaren SR Film Tablet 75mg Kısa Ürün Bilgisi 2. Voltaren 100mg Uzatılmış Salımlı Tablet Kısa Ürün Bilgisi" // İlgili soruya eklenen referans metni },
   { q: "Voltaren SR 75 mg’nin sinovyal sıvı ile ilgili aşağıdaki ifadelerden hangisi doğrudur?",        choices: ["Plazma Düzeyine Eşittir","Plazmadan Daha Düşük Kalır","Sinovyal Sıvıda 12 Saat Boyunca Plazmadakinden Daha Yüksek Kalır","Sinovyal Sıvıya Geçmez"],                            answer: 2 },
   { q: "NSAİİ’ler ile karşılaştırıldığında Voltaren için aşağıdaki ifadelerden hangisi uygundur?",                      choices: ["Akut Böbrek Hasar Riski En Yüksek NSAİİ’dir","Akut Böbrek Hasar Riski Düşük NSAİİ Tercihidir","Böbrekler Üzerinde Etkisi Yoktur","Böbrekler Üzerinde Sadece Kısa Süreli Kullanımda Güvenlidir"],                    answer: 3 },
   { q: "Cataflam® aşağıdakilerden hangisinde endikedir?",       choices: ["Akut Kas-İskelet Sistemi Ağrıları","Postoperatif Ağrı","Dismenore","Hepsi"],                             answer: 3 },
@@ -370,8 +370,8 @@ function renderQuiz(scr) {
           🏆 ${state.score}
         </div>
       </div>
-      <img src="https://raw.githubusercontent.com/nvs-pro-tr/yarisma/refs/heads/main/novartis.png" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); max-height: 50px;" alt="Novartis" />
     </div>
+    <img src="https://raw.githubusercontent.com/nvs-pro-tr/yarisma/refs/heads/main/novartis.png" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); max-height: 50px;" alt="Novartis" />
   `;
 
   const timerEl = scr.querySelector("#q-timer");
