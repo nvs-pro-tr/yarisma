@@ -337,9 +337,9 @@ function renderRegister(scr) {
 
 /* ─── COUNTDOWN START ────────────────────────────────── */
 function renderCountdownStart(scr) {
-  state.countdownVal = 10;
+  state.countdownVal = 5;
   scr.innerHTML = `
-    <div class="countdown-big" id="cd-num">10</div>
+    <div class="countdown-big" id="cd-num">5</div>
     <div class="countdown-label">Soruları en hızlı şekilde cevapla ve ardından reflekslerin konuşsun!</div>
     <div class="countdown-sublabel">— Hızlı olan kazanır! —</div>
   `;
@@ -456,7 +456,7 @@ function renderQuiz(scr) {
 
 /* ─── INTERMISSION ───────────────────────────────────── */
 function renderIntermission(scr) {
-  state.interTimerLeft = 10;
+  state.interTimerLeft = 5;
   scr.innerHTML = `
     <div class="score-display">
       <div class="score-label">Etap 1 Puanınız</div>
