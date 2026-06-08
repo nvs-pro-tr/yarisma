@@ -306,11 +306,11 @@ function renderIntro(scr) {
       <div class="logo-sub">Soruları Hızla Cevapla · Reflekslerini Test Et!</div>
     </div>
     
-    <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
-      <button class="btn btn-primary" id="btn-start">Başla !</button>
-      <button class="btn btn-gold" id="btn-intro-score">🏅 Skor Tablosu</button>
-    </div>
+    <button class="btn btn-primary" id="btn-start">Başla !</button>
+
+    <button id="btn-intro-score" title="Skor Tablosu" style="position: absolute; bottom: max(20px, env(safe-area-inset-bottom)); left: max(20px, env(safe-area-inset-left)); z-index: 99; font-size: 22px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,245,255,0.2); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">🏅</button>
   `;
+  
   scr.querySelector("#btn-start").onclick = () => goto("register");
   scr.querySelector("#btn-intro-score").onclick = () => goto("scoreboard");
 }
